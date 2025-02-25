@@ -30,7 +30,6 @@ contract FundToMe {
         address indexed funder,
         uint256[] contributions
     );
-    event Test(string message);
 
     constructor(address priceFeed) {
         s_priceFeed = AggregatorV3Interface(priceFeed);
@@ -78,19 +77,15 @@ contract FundToMe {
     function withdraw() external {
         uint256 amount = s_addressToAmountFunded[msg.sender];
         require(amount > 0, "No funds available to withdraw!");
-        emit Test("Passed 1");
         require(
             address(this).balance >= amount,
             "Insufficient contract balance"
         );
-        emit Test("Passed 2");
-
         uint256 timeRemaining = getTimeRemainingForWithdrawal(msg.sender);
         require(
             timeRemaining == 0,
             "Withdrawal locked. Please wait until lock time ends!"
         );
-        emit Test("Passed 3");
 
         // Reset the caller's fundings
         s_addressToAmountFunded[msg.sender] = 0;
@@ -100,7 +95,6 @@ contract FundToMe {
 
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         if (!success) revert TransferFailed();
-        emit Test("Passed 4");
         emit Withdraw(msg.sender, amount);
     }
 
