@@ -22,7 +22,6 @@ contract FundMeTest is Test {
     address getPriceFeed;
     address owner;
     address USER = makeAddr("user"); // Create a fake address for tests
-    address USER2 = makeAddr("user2"); // Create a fake address for tests
 
     event Fund(address indexed funder, uint256 amount);
     event Withdraw(address indexed recipient, uint256 amount);
@@ -160,6 +159,28 @@ contract FundMeTest is Test {
         assertEq(endingUserBalance, startingUserBalance);
     }
 
+    function test_FallbackTriggersAndCallsFund() public {
+        vm.prank(USER);
+        // Call with some data to trigger fallback function. It will call fund function
+        (bool success, ) = address(fundMe).call{value: 1 ether}("some data");
+        require(success, "transfer failed");
+
+        // Verify the ETH was recorded in the contract
+        uint256 amountFunded = fundMe.getAddressToAmountFunded(USER);
+        assertEq(amountFunded, 1 ether);
+    }
+
+    function test_ReceiveTriggersAndCallsFund() public {
+        vm.prank(USER);
+        // Call without data to trigger receive function. It will call fund function
+        (bool success, ) = address(fundMe).call{value: 1 ether}("");
+        require(success, "transfer failed");
+
+        // Verify the ETH was recorded in the contract
+        uint256 amountFunded = fundMe.getAddressToAmountFunded(USER);
+        assertEq(amountFunded, 1 ether);
+    }
+
     function test_EmitWithdrawEventAfterSuccessfulWithdrawal()
         public
         fundToContractByUSER
@@ -169,6 +190,28 @@ contract FundMeTest is Test {
         emit Withdraw(USER, 1 ether);
         vm.prank(USER);
         fundMe.withdraw();
+    }
+
+    function testRevert_ReceiveRevertsIfFundReverts() public {
+        // smallAmount should be less than $1 worth of ether to revert fund() so receive() will revert
+        uint256 smallAmount = 1 wei;
+
+        // Expect revert because fund() has a minimum ETH requirement
+        vm.expectRevert("You need to spend more ETH!");
+        vm.prank(USER);
+        (bool success, ) = address(fundMe).call{value: smallAmount}("");
+    }
+
+    function testRevert_FallbackRevertsIfFundReverts() public {
+        // smallAmount should be less than $1 worth of ether to revert fund() so fallback() will revert
+        uint256 smallAmount = 1 wei;
+
+        // Expect revert because fund() has a minimum ETH requirement
+        vm.expectRevert("You need to spend more ETH!");
+        vm.prank(USER);
+        (bool success, ) = address(fundMe).call{value: smallAmount}(
+            "some data"
+        );
     }
 
     function testRevert_UserHasNotEnoughBalanceForFund() public {
