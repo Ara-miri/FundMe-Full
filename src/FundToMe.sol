@@ -8,7 +8,7 @@ import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 contract FundToMe {
     error FundMe__NotOwner();
     error FundMe__InsufficientFunds();
-    error TransferFailed();
+    error FundMe__TransferFailed();
 
     // Type Declarations
     using PriceConverter for uint256;
@@ -77,10 +77,7 @@ contract FundToMe {
     function withdraw() external {
         uint256 amount = s_addressToAmountFunded[msg.sender];
         require(amount > 0, "No funds available to withdraw!");
-        require(
-            address(this).balance >= amount,
-            "Insufficient contract balance"
-        );
+
         uint256 timeRemaining = getTimeRemainingForWithdrawal(msg.sender);
         require(
             timeRemaining == 0,
@@ -94,7 +91,7 @@ contract FundToMe {
         delete s_funderContributionsByTimestamp[msg.sender];
 
         (bool success, ) = payable(msg.sender).call{value: amount}("");
-        if (!success) revert TransferFailed();
+        if (!success) revert FundMe__TransferFailed();
         emit Withdraw(msg.sender, amount);
     }
 
