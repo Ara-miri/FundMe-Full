@@ -22,6 +22,7 @@ contract FundMeTest is Test {
     address getPriceFeed;
     address owner;
     address USER = makeAddr("user"); // Create a fake address for tests
+    address USER2 = makeAddr("user2"); // Create a fake address for tests
 
     event Fund(address indexed funder, uint256 amount);
     event Withdraw(address indexed recipient, uint256 amount);
@@ -189,7 +190,7 @@ contract FundMeTest is Test {
         vm.prank(address(revertingReceiver));
         fundMe.fund{value: 1 ether}();
 
-        vm.expectRevert(FundToMe.TransferFailed.selector);
+        vm.expectRevert(FundToMe.FundMe__TransferFailed.selector);
         skip(120);
         vm.prank(address(revertingReceiver));
         fundMe.withdraw();
