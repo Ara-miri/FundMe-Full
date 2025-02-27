@@ -86,10 +86,19 @@ contract FundMeTest is Test {
         assertEq(version, 4);
     }
 
-    /* test_PriceFeedAddressIsCorrect() will not pass with mock contracts. So I make it private to skip it.
-  it works with real testnet/mainnet contracts though.
-  */
-    function test_PriceFeedAddressIsCorrect() private view {
+    /* test_PriceFeedAddressIsCorrect() does not pass with mock contracts.
+        it works with real testnet/mainnet contracts though.
+    */
+    function test_PriceFeedAddressIsCorrect() public view {
+        uint256 mainnetChainId = 1;
+        uint256 sepoliaChainId = 11155111;
+        // Pass the test early if the chain ID is not mainnet or sepolia
+        if (
+            block.chainid != mainnetChainId && block.chainid != sepoliaChainId
+        ) {
+            return;
+        }
+
         AggregatorV3Interface retrievedPriceFeed = fundMe.getPriceFeed();
         assertEq(address(retrievedPriceFeed), getPriceFeed);
     }
