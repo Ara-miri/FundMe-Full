@@ -1,32 +1,45 @@
 Compiling 26 files with Solc 0.8.28
-Solc 0.8.28 finished in 3.28s
+Solc 0.8.28 finished in 3.22s
+Compiler run successful with warnings:
+Warning (2072): Unused local variable.
+   --> test/TestFundMe.t.sol:211:10:
+    |
+211 |         (bool success, ) = address(fundMe).call{value: smallAmount}("");
+    |          ^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/TestFundMe.t.sol:221:10:
+    |
+221 |         (bool success, ) = address(fundMe).call{value: smallAmount}(
+    |          ^^^^^^^^^^^^
 
 Analysing contracts...
 Running tests...
 
-Ran 19 tests for test/TestFundMe.t.sol:FundMeTest
-[PASS] testRevert_FallbackRevertsIfFundReverts() (gas: 36699)
+Ran 20 tests for test/TestFundMe.t.sol:FundMeTest
+[PASS] testRevert_FallbackRevertsIfFundReverts() (gas: 36633)
 [PASS] testRevert_GetTimeLockRevertsIfUserNotFund() (gas: 14481)
 [PASS] testRevert_ReceiveRevertsIfFundReverts() (gas: 36502)
-[PASS] testRevert_UserHasNotEnoughBalanceForFund() (gas: 28738)
+[PASS] testRevert_UserHasNotEnoughBalanceForFund() (gas: 28760)
 [PASS] testRevert_UserWithdrawTooEarly() (gas: 155514)
-[PASS] testRevert_UserWithdrawWithoutAnyFunding() (gas: 13474)
-[PASS] testRevert_WithdrawFailedErrorOnReceiverReject() (gas: 126312)
-[PASS] test_ContractBalanceIsZeroAfterWithdraw() (gas: 127380)
-[PASS] test_EmitWithdrawEventAfterSuccessfulWithdrawal() (gas: 130244)
+[PASS] testRevert_UserWithdrawWithoutAnyFunding() (gas: 13496)
+[PASS] testRevert_WithdrawFailedErrorOnReceiverReject() (gas: 126330)
+[PASS] test_ContractBalanceIsZeroAfterWithdraw() (gas: 127397)
+[PASS] test_EmitWithdrawEventAfterSuccessfulWithdrawal() (gas: 130191)
 [PASS] test_FallbackTriggersAndCallsFund() (gas: 152376)
-[PASS] test_Funding() (gas: 154448)
-[PASS] test_GetAmountsFundedIsCorrect() (gas: 288204)
+[PASS] test_Funding() (gas: 154470)
+[PASS] test_GetAmountsFundedIsCorrect() (gas: 288226)
 [PASS] test_GetFunderContributionsByblockTimestamp() (gas: 351629)
 [PASS] test_GetTimeRemainingForWithdrawalIsTwoMinutes() (gas: 155567)
 [PASS] test_MinimumDollarIsOne() (gas: 8907)
-[PASS] test_ReceiveTriggersAndCallsFund() (gas: 152220)
+[PASS] test_PriceFeedAddressIsCorrect() (gas: 285)
+[PASS] test_ReceiveTriggersAndCallsFund() (gas: 152242)
 [PASS] test_UserBalanceRestoredAfterWithdraw() (gas: 129300)
 [PASS] test_VersionIsAccurate() (gas: 14421)
 [PASS] test_WithdrawalLockDuration() (gas: 8884)
-Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 4.00ms (16.24ms CPU time)
+Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 3.62ms (13.82ms CPU time)
 
-Ran 1 test suite in 10.20ms (4.00ms CPU time): 19 tests passed, 0 failed, 0 skipped (19 total tests)
+Ran 1 test suite in 10.88ms (3.62ms CPU time): 20 tests passed, 0 failed, 0 skipped (20 total tests)
 
 ╭---------------------------------+-----------------+----------------+-----------------+----------------╮
 | File                            | % Lines         | % Statements   | % Branches      | % Funcs        |
