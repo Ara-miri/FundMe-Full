@@ -64,7 +64,7 @@ For Linux:
 xdg-open coverage-report/index.html
 ```
 
-\- You can use any IDE/editor lcov viewer extensiob to open the report.
+**\- You can use any IDE/editor lcov viewer extension to open the report.**
 
 ## Security Features
 
