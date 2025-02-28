@@ -5,7 +5,7 @@ import {AggregatorV3Interface} from "lib/chainlink-brownie-contracts/contracts/s
 import {PriceConverter} from "./Helpers/PriceConverter.sol";
 import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 
-contract FundToMe {
+contract FundMe {
     error FundMe__NotOwner();
     error FundMe__InsufficientFunds();
     error FundMe__TransferFailed();

@@ -2,10 +2,10 @@
 pragma solidity ^0.8.19;
 
 import {Test, console} from "forge-std/Test.sol";
-import {FundToMe} from "../src/FundToMe.sol";
+import {FundMe} from "../src/FundMe.sol";
 import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 import {AggregatorV3Interface} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
-import {DeployFundToMe} from "../script/DeployFundMe.s.sol";
+import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 import {HelperConfig} from "../script/HelperConfig.s.sol";
 
 /// @dev Used to simulate failed ETH transfers in withdrawal tests
@@ -16,7 +16,7 @@ contract RevertingReceiver {
 }
 
 contract FundMeTest is Test {
-    FundToMe fundMe;
+    FundMe fundMe;
     RevertingReceiver revertingReceiver;
     uint256 fundingAmount = 1 ether;
     address getPriceFeed;
@@ -34,7 +34,7 @@ contract FundMeTest is Test {
         HelperConfig helperConfig = new HelperConfig();
         revertingReceiver = new RevertingReceiver();
         getPriceFeed = helperConfig.activeNetworkConfig();
-        DeployFundToMe deployFundMe = new DeployFundToMe();
+        DeployFundMe deployFundMe = new DeployFundMe();
         fundMe = deployFundMe.run();
         vm.deal(USER, 10 ether); // We give the fake user a starting balance of ETH
     }
@@ -242,7 +242,7 @@ contract FundMeTest is Test {
         vm.prank(address(revertingReceiver));
         fundMe.fund{value: 1 ether}();
 
-        vm.expectRevert(FundToMe.FundMe__TransferFailed.selector);
+        vm.expectRevert(FundMe.FundMe__TransferFailed.selector);
         skip(120);
         vm.prank(address(revertingReceiver));
         fundMe.withdraw();
