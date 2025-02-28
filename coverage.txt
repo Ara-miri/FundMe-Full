@@ -1,17 +1,6 @@
 Compiling 26 files with Solc 0.8.28
 Solc 0.8.28 finished in 3.22s
-Compiler run successful with warnings:
-Warning (2072): Unused local variable.
-   --> test/TestFundMe.t.sol:211:10:
-    |
-211 |         (bool success, ) = address(fundMe).call{value: smallAmount}("");
-    |          ^^^^^^^^^^^^
-
-Warning (2072): Unused local variable.
-   --> test/TestFundMe.t.sol:221:10:
-    |
-221 |         (bool success, ) = address(fundMe).call{value: smallAmount}(
-    |          ^^^^^^^^^^^^
+Compiler run successful:
 
 Analysing contracts...
 Running tests...
