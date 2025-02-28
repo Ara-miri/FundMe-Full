@@ -1,7 +1,6 @@
 Compiling 26 files with Solc 0.8.28
-Solc 0.8.28 finished in 3.22s
+Solc 0.8.28 finished in 3.40s
 Compiler run successful:
-
 Analysing contracts...
 Running tests...
 
@@ -26,9 +25,9 @@ Ran 20 tests for test/TestFundMe.t.sol:FundMeTest
 [PASS] test_UserBalanceRestoredAfterWithdraw() (gas: 129300)
 [PASS] test_VersionIsAccurate() (gas: 14421)
 [PASS] test_WithdrawalLockDuration() (gas: 8884)
-Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 3.62ms (13.82ms CPU time)
+Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 3.87ms (14.68ms CPU time)
 
-Ran 1 test suite in 10.88ms (3.62ms CPU time): 20 tests passed, 0 failed, 0 skipped (20 total tests)
+Ran 1 test suite in 13.15ms (3.87ms CPU time): 20 tests passed, 0 failed, 0 skipped (20 total tests)
 
 ╭---------------------------------+-----------------+----------------+-----------------+----------------╮
 | File                            | % Lines         | % Statements   | % Branches      | % Funcs        |
@@ -37,7 +36,7 @@ Ran 1 test suite in 10.88ms (3.62ms CPU time): 20 tests passed, 0 failed, 0 skip
 |---------------------------------+-----------------+----------------+-----------------+----------------|
 | script/HelperConfig.s.sol       | 55.00% (11/20)  | 58.82% (10/17) | 40.00% (2/5)    | 50.00% (2/4)   |
 |---------------------------------+-----------------+----------------+-----------------+----------------|
-| src/FundToMe.sol                | 95.35% (41/43)  | 97.30% (36/37) | 100.00% (11/11) | 91.67% (11/12) |
+| src/FundMe.sol                  | 95.35% (41/43)  | 97.30% (36/37) | 100.00% (11/11) | 91.67% (11/12) |
 |---------------------------------+-----------------+----------------+-----------------+----------------|
 | src/Helpers/PriceConverter.sol  | 100.00% (7/7)   | 100.00% (8/8)  | 100.00% (0/0)   | 100.00% (2/2)  |
 |---------------------------------+-----------------+----------------+-----------------+----------------|
