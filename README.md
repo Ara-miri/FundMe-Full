@@ -44,13 +44,13 @@ A decentralized funding contract that allows users to contribute ETH with a time
 
 To generate and view test coverage:
 
-1. Generate coverage report:
+**1. Generate coverage report:**
 
 ```bash
 genhtml lcov.info -o coverage-report
 ```
 
-2. View the report:
+**2. View the report:**
 
 For macOS:
 
