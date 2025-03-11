@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>First app</title>
+  </head>
+  <body>
+    <script src="./js files/index.js" type="module"></script>
+    <div>
+      <button id="connectButton">Connect Wallet</button>
+    </div>
+    <div>
+      <input id="userAmountInput" placeholder="Enter your amount:" />
+      <button id="fundButton">Deposit</button>
+    </div>
+    <br />
+    <div class="withdraw-section">
+      <button id="withdrawButton">Withdraw your funds</button>
+      <p
+        id="withdrawalTimer"
+        style="display: none; margin-left: 10px; color: #ff0000"
+      ></p>
+      <!-- <p id="withdraw-info"></p> -->
+    </div>
+    <div class="display-message">
+      <p id="displayMessage"></p>
+    </div>
+    <div>
+      <p>Your Deposited Balance:</p>
+      <p id="userBalance">Connect your wallet to see your deposited balance</p>
+    </div>
+  </body>
+</html>
