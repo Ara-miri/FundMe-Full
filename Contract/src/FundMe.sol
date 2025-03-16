@@ -60,6 +60,27 @@ contract FundMe {
         emit Fund(msg.sender, msg.value);
     }
 
+    function withdraw() external {
+        uint256 amount = s_addressToAmountFunded[msg.sender];
+        require(amount > 0, "No funds available to withdraw!");
+
+        uint256 timeRemaining = getTimeRemainingForWithdrawal(msg.sender);
+        require(
+            timeRemaining == 0,
+            "Withdrawal locked. Please wait until lock time ends!"
+        );
+
+        // Reset the caller's fundings
+        s_addressToAmountFunded[msg.sender] = 0;
+        // Reset the caller's fundings list to empty
+        s_fundingsByUser;
+        delete s_funderContributionsByTimestamp[msg.sender];
+
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        if (!success) revert FundMe__TransferFailed();
+        emit Withdraw(msg.sender, amount);
+    }
+
     function getTimeRemainingForWithdrawal(
         address _funder
     ) public view returns (uint256) {
@@ -80,27 +101,6 @@ contract FundMe {
         } else {
             return 0;
         }
-    }
-
-    function withdraw() external {
-        uint256 amount = s_addressToAmountFunded[msg.sender];
-        require(amount > 0, "No funds available to withdraw!");
-
-        uint256 timeRemaining = getTimeRemainingForWithdrawal(msg.sender);
-        require(
-            timeRemaining == 0,
-            "Withdrawal locked. Please wait until lock time ends!"
-        );
-
-        // Reset the caller's fundings
-        s_addressToAmountFunded[msg.sender] = 0;
-        // Reset the caller's fundings list to empty
-        s_fundingsByUser;
-        delete s_funderContributionsByTimestamp[msg.sender];
-
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        if (!success) revert FundMe__TransferFailed();
-        emit Withdraw(msg.sender, amount);
     }
 
     /**
