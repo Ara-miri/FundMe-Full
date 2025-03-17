@@ -6,6 +6,7 @@ import {PriceConverter} from "./Helpers/PriceConverter.sol";
 import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 
 contract FundMe {
+    // Errors
     error FundMe__InsufficientFunds();
     error FundMe__TransferFailed();
     error FundMe__NoFundsAvailable();
@@ -26,6 +27,7 @@ contract FundMe {
     mapping(address => uint256[]) private s_fundingsByUser;
     AggregatorV3Interface private s_priceFeed;
 
+    // Events
     event Fund(address indexed funder, uint256 amount);
     event Withdraw(address indexed recipient, uint256 amount);
     event ContributionsByFunder(
