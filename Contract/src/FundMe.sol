@@ -65,7 +65,7 @@ contract FundMe {
 
     function withdraw() external {
         uint256 amount = s_addressToAmountFunded[msg.sender];
-        if (!amount > 0) {
+        if (amount == 0) {
             revert FundMe__NoFundsAvailable();
         }
 
@@ -91,7 +91,7 @@ contract FundMe {
         uint256[] memory contributions = s_funderContributionsByTimestamp[
             _funder
         ];
-        if (!contributions.length > 0) {
+        if (contributions.length == 0) {
             revert FundMe__NoContributionsFound();
         }
 
