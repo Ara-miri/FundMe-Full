@@ -42,7 +42,7 @@ export async function initializeContract() {
   } catch (error) {
     /* The error is expected for newly connected users/users that withdrawn their funds. Comes from the contract 
        getTimeRemainingForWithdrawal function */
-    if (error.reason === "No contribution found for this address") {
+    if (error.reason === "FundMe__NoContributionsFound()") {
       document.getElementById("userBalance").textContent = "0 ETH";
     }
   }
@@ -69,14 +69,6 @@ async function updateWithdrawalTimer() {
 async function initializeApplication() {
   // Checks chain changes and updates UI accordingly
   liveChainChangeCheck();
-
-  // Set up periodic timer updates
-  setInterval(async () => {
-    if (currentAccount && contract && timeRemaining >= 0) {
-      await updateWithdrawalTimer().then(--timeRemaining);
-      console.log("Time remaining:", timeRemaining);
-    }
-  }, 1000);
 
   // Connect button handler
   connectButton.addEventListener("click", async () => {
@@ -128,7 +120,13 @@ async function handleFund() {
     await tx.wait();
 
     displayMessage.innerHTML = `Deposit successful: <a href="${TARGET_NETWORK.config.blockExplorerUrls[0]}/tx/${tx.hash}" target="_blank">View transaction</a>`;
-    await updateWithdrawalTimer();
+    // Set up periodic timer updates
+    setInterval(async () => {
+      if (timeRemaining >= 0) {
+        await updateWithdrawalTimer().then(--timeRemaining);
+        console.log("Time remaining:", timeRemaining);
+      }
+    }, 1000);
     await getUserBalance();
   } catch (error) {
     console.error("Funding failed:", error);
@@ -143,11 +141,6 @@ async function handleWithdraw() {
     return;
   }
 
-  if ((await contract.getAddressToAmountFunded(currentAccount)) == 0) {
-    alert("You don't have any funds to withdraw.");
-    return;
-  }
-
   try {
     const tx = await contract.withdraw();
     await tx.wait();
@@ -155,8 +148,10 @@ async function handleWithdraw() {
     displayMessage.innerHTML = `Withdrawal successful: <a href="${TARGET_NETWORK.explorer}/tx/${tx.hash}" target="_blank">View transaction</a>`;
     await getUserBalance();
   } catch (error) {
-    console.error("Withdrawal failed:", error);
-    alert(error.shortMessage || "Withdrawal failed");
+    if (error.data == "0x6d6dd202") {
+      console.error("FundMe__NoFundsAvailable()");
+      alert("No funds available for withdrawal.");
+    }
   }
 }
 
