@@ -153,8 +153,10 @@ export const contractAbi = [
     anonymous: false,
   },
   { type: "error", name: "FundMe__InsufficientFunds", inputs: [] },
-  { type: "error", name: "FundMe__NotOwner", inputs: [] },
+  { type: "error", name: "FundMe__NoContributionsFound", inputs: [] },
+  { type: "error", name: "FundMe__NoFundsAvailable", inputs: [] },
   { type: "error", name: "FundMe__TransferFailed", inputs: [] },
+  { type: "error", name: "FundMe__WithdrawalLocked", inputs: [] },
 ];
 
 export const sepoliaChain = {
@@ -182,7 +184,7 @@ export const optimismSepoliaChain = {
 export const contractAddressSepolia =
   "0xdadaD79811F69c8F520f18d2b6B04F7f25ED467d"; // deployed at "network sepolia"
 export const contractAddressOpSepolia =
-  "0x80339D6B6fD991e702eDE4F489dEd6b99DA804a7"; // deployed at "network optimism sepolia"
+  "0x847FfbeCFe0bD5a40F5f29351bB4f471D51F2853"; // deployed at "network optimism sepolia"
 
 export const opSepoliaPriceFeedaddress =
   "0x61Ec26aA57019C486B10502285c5A3D4A4750AD7"; // Optimism Sepolia ETH/USD feed
