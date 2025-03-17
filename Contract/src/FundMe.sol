@@ -6,9 +6,11 @@ import {PriceConverter} from "./Helpers/PriceConverter.sol";
 import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 
 contract FundMe {
-    error FundMe__NotOwner();
     error FundMe__InsufficientFunds();
     error FundMe__TransferFailed();
+    error FundMe__NoFundsAvailable();
+    error FundMe__WithdrawalLocked();
+    error FundMe__NoContributionsFound();
 
     // Type Declarations
     using PriceConverter for uint256;
@@ -44,10 +46,9 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(
-            msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
-            "You need to spend more ETH!"
-        );
+        if (msg.value.getConversionRate(s_priceFeed) < MINIMUM_USD) {
+            revert FundMe__InsufficientFunds();
+        }
 
         s_funderContributionsByTimestamp[msg.sender].push(block.timestamp); // Record the contribution timestamp
         s_addressToAmountFunded[msg.sender] += msg.value;
@@ -62,13 +63,14 @@ contract FundMe {
 
     function withdraw() external {
         uint256 amount = s_addressToAmountFunded[msg.sender];
-        require(amount > 0, "No funds available to withdraw!");
+        if (!amount > 0) {
+            revert FundMe__NoFundsAvailable();
+        }
 
         uint256 timeRemaining = getTimeRemainingForWithdrawal(msg.sender);
-        require(
-            timeRemaining == 0,
-            "Withdrawal locked. Please wait until lock time ends!"
-        );
+        if (timeRemaining != 0) {
+            revert FundMe__WithdrawalLocked();
+        }
 
         // Reset the caller's fundings
         s_addressToAmountFunded[msg.sender] = 0;
@@ -87,10 +89,9 @@ contract FundMe {
         uint256[] memory contributions = s_funderContributionsByTimestamp[
             _funder
         ];
-        require(
-            contributions.length > 0,
-            "No contribution found for this address"
-        );
+        if (!contributions.length > 0) {
+            revert FundMe__NoContributionsFound();
+        }
 
         uint256 lastContribution = contributions[contributions.length - 1]; // Get the most recent contribution
 
