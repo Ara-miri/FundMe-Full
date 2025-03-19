@@ -129,8 +129,14 @@ async function handleFund() {
     }, 1000);
     await getUserBalance();
   } catch (error) {
+    if (error.code === 4001 || error.message.includes("user rejected")) {
+      displayTransactionMessage("Transaction rejected by user");
+    } else {
+      displayTransactionMessage(
+        `Transaction failed: ${error.shortMessage || error.message}`
+      );
+    }
     console.error("Funding failed:", error);
-    alert(error.shortMessage || "Transaction failed");
   }
 }
 
@@ -151,7 +157,14 @@ async function handleWithdraw() {
     if (error.data == "0x6d6dd202") {
       console.error("FundMe__NoFundsAvailable()");
       alert("No funds available for withdrawal.");
+    } else if (error.code === 4001 || error.message.includes("user rejected")) {
+      displayTransactionMessage("Withdrawal cancelled by user");
+    } else {
+      displayTransactionMessage(
+        `Withdrawal failed: ${error.shortMessage || error.message}`
+      );
     }
+    console.error("Withdrawal failed:", error);
   }
 }
 
@@ -200,6 +213,23 @@ export async function getUserBalance() {
 async function getWalletAddress() {
   const signer = await provider.getSigner();
   return signer.address;
+}
+
+function displayTransactionMessage(message, isError = true) {
+  const alertDiv = document.createElement("div");
+  alertDiv.className = `transaction-alert ${isError ? "error" : "success"}`;
+  alertDiv.textContent = message;
+
+  document.body.appendChild(alertDiv);
+
+  // Trigger animation
+  setTimeout(() => alertDiv.classList.add("visible"), 10);
+
+  // Auto-remove after 3 seconds
+  setTimeout(() => {
+    alertDiv.classList.remove("visible");
+    setTimeout(() => alertDiv.remove(), 300);
+  }, 3000);
 }
 
 // Start the application

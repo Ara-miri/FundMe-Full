@@ -38,3 +38,23 @@
   cursor: pointer;
   animation: pulse 2s infinite;
 }
+
+.transaction-alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  background: #ff4444;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.transaction-alert.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
