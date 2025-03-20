@@ -156,7 +156,7 @@ async function handleWithdraw() {
   } catch (error) {
     if (error.data == "0x6d6dd202") {
       console.error("FundMe__NoFundsAvailable()");
-      alert("No funds available for withdrawal.");
+      displayTransactionMessage("No funds available for withdrawal.");
     } else if (error.code === 4001 || error.message.includes("user rejected")) {
       displayTransactionMessage("Withdrawal cancelled by user");
     } else {
