@@ -4,20 +4,34 @@ pragma solidity ^0.8.19;
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
-import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
+import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract DeployFundMe is Script {
-    function run() external returns (FundMe) {
-        HelperConfig helperConfig = new HelperConfig();
-        address priceFeed = helperConfig.activeNetworkConfig();
+    HelperConfig public helperConfig;
+    address priceFeedAddress;
+    TransparentUpgradeableProxy public proxy;
 
-        vm.startBroadcast(); // Start sending transactions
+    address ADMIN = makeAddr("admin");
 
-        // Deploy FundMe contract with the selected price feed
-        FundMe fundMe = new FundMe(priceFeed);
-        console.log("Deployed FundMe contract at address: %s", address(fundMe));
-        vm.stopBroadcast(); // Stop sending transactions
-        return fundMe;
+    function run()
+        external
+        returns (FundMe, TransparentUpgradeableProxy, address)
+    {
+        helperConfig = new HelperConfig();
+        priceFeedAddress = helperConfig.activeNetworkConfig();
+
+        vm.startBroadcast();
+        FundMe fundMeV1 = new FundMe();
+        proxy = new TransparentUpgradeableProxy(
+            address(fundMeV1),
+            ADMIN,
+            abi.encodeWithSelector(FundMe.initialize.selector, priceFeedAddress) // Initializer data
+        );
+        fundMeV1 = FundMe(payable(address(proxy)));
+        vm.stopBroadcast();
+
+        // return all the values to avoid possible errors in tests
+        return (fundMeV1, proxy, ADMIN);
     }
 }
