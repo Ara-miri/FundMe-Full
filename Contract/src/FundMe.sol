@@ -4,8 +4,9 @@ pragma solidity ^0.8.19;
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./Helpers/PriceConverter.sol";
 import {MockV3Aggregator} from "../test/Mocks/MockV3Aggregator.sol";
+import {Initializable} from "@openzeppelin/upgradeable-contracts/proxy/utils/Initializable.sol";
 
-contract FundMe {
+contract FundMe is Initializable {
     // Errors
     error FundMe__InsufficientFunds();
     error FundMe__TransferFailed();
@@ -35,7 +36,7 @@ contract FundMe {
         uint256[] contributions
     );
 
-    constructor(address priceFeed) {
+    function initialize(address priceFeed) public initializer {
         s_priceFeed = AggregatorV3Interface(priceFeed);
     }
 
@@ -139,7 +140,7 @@ contract FundMe {
         return s_funderContributionsByTimestamp[_funder].length;
     }
 
-    function getPriceFeed() public view returns (AggregatorV3Interface) {
-        return s_priceFeed;
+    function getPriceFeed() public view returns (address) {
+        return address(s_priceFeed);
     }
 }
