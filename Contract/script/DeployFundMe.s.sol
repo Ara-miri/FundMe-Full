@@ -12,8 +12,6 @@ contract DeployFundMe is Script {
     address priceFeedAddress;
     TransparentUpgradeableProxy public proxy;
 
-    address ADMIN = makeAddr("admin");
-
     function run()
         external
         returns (FundMe, TransparentUpgradeableProxy, address)
@@ -25,13 +23,13 @@ contract DeployFundMe is Script {
         FundMe fundMeV1 = new FundMe();
         proxy = new TransparentUpgradeableProxy(
             address(fundMeV1),
-            ADMIN,
+            msg.sender,
             abi.encodeWithSelector(FundMe.initialize.selector, priceFeedAddress) // Initializer data
         );
         fundMeV1 = FundMe(payable(address(proxy)));
         vm.stopBroadcast();
 
         // return all the values to avoid possible errors in tests
-        return (fundMeV1, proxy, ADMIN);
+        return (fundMeV1, proxy, msg.sender);
     }
 }
