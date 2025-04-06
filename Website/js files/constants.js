@@ -1,9 +1,4 @@
 export const contractAbi = [
-  {
-    type: "constructor",
-    inputs: [{ name: "priceFeed", type: "address", internalType: "address" }],
-    stateMutability: "nonpayable",
-  },
   { type: "fallback", stateMutability: "payable" },
   { type: "receive", stateMutability: "payable" },
   {
@@ -63,15 +58,16 @@ export const contractAbi = [
   },
   {
     type: "function",
+    name: "getNewValue",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getPriceFeed",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract AggregatorV3Interface",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
@@ -87,6 +83,20 @@ export const contractAbi = [
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "initialize",
+    inputs: [{ name: "priceFeed", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setNewValue",
+    inputs: [{ name: "_value", type: "uint256", internalType: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -135,6 +145,32 @@ export const contractAbi = [
   },
   {
     type: "event",
+    name: "Initialized",
+    inputs: [
+      {
+        name: "version",
+        type: "uint64",
+        indexed: false,
+        internalType: "uint64",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "NewValueSet",
+    inputs: [
+      {
+        name: "newValue",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "Withdraw",
     inputs: [
       {
@@ -157,6 +193,8 @@ export const contractAbi = [
   { type: "error", name: "FundMe__NoFundsAvailable", inputs: [] },
   { type: "error", name: "FundMe__TransferFailed", inputs: [] },
   { type: "error", name: "FundMe__WithdrawalLocked", inputs: [] },
+  { type: "error", name: "InvalidInitialization", inputs: [] },
+  { type: "error", name: "NotInitializing", inputs: [] },
 ];
 
 export const sepoliaChain = {
@@ -181,12 +219,9 @@ export const optimismSepoliaChain = {
   rpcUrls: ["https://sepolia.optimism.io"],
   blockExplorerUrls: ["https://sepolia-optimistic.etherscan.io"],
 };
-export const contractAddressSepolia =
-  "0xdadaD79811F69c8F520f18d2b6B04F7f25ED467d"; // deployed at "network sepolia"
+
 export const contractAddressOpSepolia =
-  "0x847FfbeCFe0bD5a40F5f29351bB4f471D51F2853"; // deployed at "network optimism sepolia"
+  "0xA75c5adA5aacFa9BC4c5DDA45B4d9975fE1AF5B1"; // proxy deployed at "network optimism sepolia"
 
 export const opSepoliaPriceFeedaddress =
   "0x61Ec26aA57019C486B10502285c5A3D4A4750AD7"; // Optimism Sepolia ETH/USD feed
-export const sepoliaPriceFeedaddress =
-  "0x694AA1769357215DE4FAC081bf1f309aDC325306"; // Sepolia ETH/USD feed
