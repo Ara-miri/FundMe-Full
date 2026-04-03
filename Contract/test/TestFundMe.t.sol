@@ -168,6 +168,32 @@ contract FundMeTest is Test {
         assertEq(endingUserBalance, startingUserBalance);
     }
 
+    function test_Withdraw_ResetsFundingsByUser() public {
+        // Fund first so we have data to check
+        vm.deal(USER, 1 ether);
+        vm.prank(USER);
+        fundMe.fund{value: 1 ether}();
+
+        // Confirm funding was recorded
+        uint256[] memory fundingsBefore = fundMe.getFundingsByUser(USER);
+        assertEq(fundingsBefore.length, 1);
+        assertEq(fundingsBefore[0], 1 ether);
+
+        // Warp past the withdrawal lock
+        vm.warp(block.timestamp + fundMe.WITHDRAWAL_LOCK_DURATION() + 1);
+
+        vm.prank(USER);
+        fundMe.withdraw();
+
+        // After withdrawal, getFundingsByUser should return an empty array
+        uint256[] memory fundingsAfter = fundMe.getFundingsByUser(USER);
+        assertEq(
+            fundingsAfter.length,
+            0,
+            "s_fundingsByUser should be reset after withdrawal"
+        );
+    }
+
     function test_FallbackTriggersAndCallsFund() public {
         vm.prank(USER);
         // Call with some data to trigger fallback function. It will call fund function
